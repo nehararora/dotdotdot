@@ -44,7 +44,7 @@ A minimalist python library to access application configuration using dot notati
 * Python 2.7
 ```
 (dot2.7) nehar@nehar-macbook ~/D/s/dotdotdot 𝓝𝓮𝓱𝓪𝓻 > pytest
-===================================================================================================================== test session starts =====================================================================================================================
+=============== test session starts ===============
 platform darwin -- Python 2.7.15, pytest-4.2.0, py-1.7.0, pluggy-0.8.1
 rootdir: /Users/nehar/Documents/src/dotdotdot, inifile: pytest.ini
 plugins: pep8-1.0.6, flake8-1.0.4
@@ -52,11 +52,11 @@ collected 3 items
 
 tests/test_config.py ...                                                                                                                                                                                                                                [100%]
 
-================================================================================================================== deprecated python version ==================================================================================================================
+=============== deprecated python version ===============
 You are using Python 2.7.15, which will no longer be supported in pytest 5.0
 For more information, please read:
   https://docs.pytest.org/en/latest/py27-py34-deprecation.html
-================================================================================================================== 3 passed in 0.10 seconds ===================================================================================================================
+=============== 3 passed in 0.10 seconds ===============
 (dot2.7) nehar@nehar-macbook ~/D/s/dotdotdot 𝓝𝓮𝓱𝓪𝓻 >
 ```
 * Python 3.7
@@ -65,7 +65,7 @@ For more information, please read:
 (dot3.7) nehar@nehar-macbook ~/D/s/dotdotdot 𝓝𝓮𝓱𝓪𝓻 > pytest
 /Users/nehar/venvs/dot3.7/lib/python3.7/site-packages/pep8.py:110: FutureWarning: Possible nested set at position 1
   EXTRANEOUS_WHITESPACE_REGEX = re.compile(r'[[({] | []}),;:]')
-===================================================================================================================== test session starts =====================================================================================================================
+=============== test session starts ===============
 platform darwin -- Python 3.7.1, pytest-4.2.0, py-1.7.0, pluggy-0.8.1
 rootdir: /Users/nehar/Documents/src/dotdotdot, inifile: pytest.ini
 plugins: pep8-1.0.6, flake8-1.0.4
@@ -73,7 +73,7 @@ collected 3 items
 
 tests/test_config.py ...                                                                                                                                                                                                                                [100%]
 
-================================================================================================================== 3 passed in 0.09 seconds ===================================================================================================================
+=============== 3 passed in 0.09 seconds ===============
 (dot3.7) nehar@nehar-macbook ~/D/s/dotdotdot 𝓝𝓮𝓱𝓪𝓻 >
 ```
 ---
