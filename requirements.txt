@@ -1,2 +1,4 @@
 PyYAML
-nose
+pytest == 4.2.0
+pytest-pep8
+pytest-flake8
