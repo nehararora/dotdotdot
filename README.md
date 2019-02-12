@@ -41,8 +41,8 @@ A minimalist python library to access application configuration using dot notati
 
 ----
 ## Run tests
-```
 * Python 2.7
+```
 (dot2.7) nehar@nehar-macbook ~/D/s/dotdotdot 𝓝𝓮𝓱𝓪𝓻 > pytest
 ===================================================================================================================== test session starts =====================================================================================================================
 platform darwin -- Python 2.7.15, pytest-4.2.0, py-1.7.0, pluggy-0.8.1
