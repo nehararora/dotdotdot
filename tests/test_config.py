@@ -2,6 +2,7 @@
 """
 test_config: Some basic test for the package.
 """
+import sys
 import pytest
 
 from .context import dotdotdot as dotconf
@@ -14,8 +15,10 @@ class TestConfig:
     def test_creation(self):
         with pytest.raises(TypeError) as ei:
             dotconf.load()
-        # assert 'xload() takes exactly 1 argument (0 given)' == str(ei.value)
-        msg = "load() missing 1 required positional argument: 'paths'"
+        if sys.version_info.major == 2:
+            msg = 'load() takes exactly 1 argument (0 given)'
+        else:
+            msg = "load() missing 1 required positional argument: 'paths'"
         assert msg == str(ei.value)
 
         with pytest.raises(dotconf.ConfigException) as ei:
