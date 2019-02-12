@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-config.py: Loads application configuration and returns an object representation.
+config: Load application configuration and return an object representation.
 
 Allows accessing configuration using "dot-notation" for supported configuration
 file formats.
@@ -21,7 +21,8 @@ Formats = Enum('Formats', names=[('yml', 1), ('ini', 2)])
 
 def repr_fx(self):
     """
-    Object representation. Function gets added as a method to generated classes.
+    Object representation. Function gets added as a method
+    to generated classes.
 
     :return: string object representation
     """
@@ -30,7 +31,8 @@ def repr_fx(self):
 
 def str_fx(self):
     """
-    String representation. Function gets added as a method to generated classes.
+    String representation. Function gets added as a method
+    to generated classes.
 
     :return: string object representation
     """
@@ -105,7 +107,8 @@ def load(paths):
     :return Config object with member properties
     """
     if not paths:
-        raise ConfigException(message='No configuration file specified', reason=paths)
+        raise ConfigException(message='No configuration file specified',
+                              reason=paths)
     yaml_dict = {}
     if type(paths) == str:
         paths = [paths]
@@ -131,4 +134,3 @@ class ConfigException(Exception):
 
     def __str__(self):
         return repr(self.message)
-
