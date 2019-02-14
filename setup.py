@@ -10,10 +10,10 @@ with open('LICENSE') as f:
 
 setup(
     name='dotdotdot',
-    version='1.0.0',
+    version='1.0.6',
     description='Access application configuration using dot notation',
     long_description=readme,
-    long_descritpion_content_type='text/markdown; charset=UTF-8',
+    long_description_content_type='text/markdown',
     url='https://github.com/nehararora/dotdotdot',
     license=license_text,
     classifiers=[
