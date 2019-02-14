@@ -15,6 +15,7 @@ class TestConfig:
     def test_creation(self):
         with pytest.raises(TypeError) as ei:
             dotconf.load()
+        # python 2, 3 have different messaging
         if sys.version_info.major == 2:
             msg = 'load() takes exactly 1 argument (0 given)'
         else:
@@ -40,14 +41,24 @@ class TestConfig:
 
         with pytest.raises(IOError) as ei:
             dotconf.load(['whatevs'])
-        # TODO: how?? assert 'whatevs' == ei.filename
         msg = "[Errno 2] No such file or directory: 'whatevs'"
         assert msg == str(ei.value)
         with pytest.raises(IOError) as ei:
             dotconf.load('whatevs')
-        # TODO: how?? assert 'whatevs' == ei.filename
         msg = "[Errno 2] No such file or directory: 'whatevs'"
         assert msg == str(ei.value)
+
+        # check for specified file being a directory
+        if sys.version_info.major == 3:
+            msg = ''
+            with pytest.raises(IsADirectoryError) as de:
+                config = dotconf.load('tests')
+                assert msg == str(de.value)
+        elif sys.version_info.major == 2:
+            msg = "[Errno 21] Is a directory: 'tests'"
+            with pytest.raises(IOError) as ie:
+                config = dotconf.load('tests')
+                assert msg == str(ie.value)
 
         config = dotconf.load('tests/test_config.yml')
         assert dotconf.Config == type(config)
