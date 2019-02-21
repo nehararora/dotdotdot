@@ -1,9 +1,8 @@
-
 # dotdotdot
 
 A minimalist python library to access application configuration using dot notation.
 
----
+----
 ## Usage
 ```bash
    (dot3.6) narora@nararombp ~/s/d/tests 𝓝𝓮𝓱𝓪𝓻 > cat test_config.yml
@@ -76,13 +75,13 @@ tests/test_config.py ...                                                        
 =============== 3 passed in 0.09 seconds ===============
 (dot3.7) nehar@nehar-macbook ~/D/s/dotdotdot 𝓝𝓮𝓱𝓪𝓻 >
 ```
----
+-----
 ## Building the wheel
 ```bash
     (3.6) nehar@mac ~/s/dotdotdot 𝓝𝓮𝓱𝓪𝓻 > python setup.py bdist_wheel
 ```
 
----
+----
 ## Installation
 ```bash
     (3.6) nehar@mac ~/s/dotdotdot 𝓝𝓮𝓱𝓪𝓻 > pip install dist/dotdotdot-1.0.0-py3-none-any.whl
