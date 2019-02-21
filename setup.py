@@ -8,9 +8,11 @@ with open('README.md') as f:
 with open('LICENSE') as f:
     license_text = f.read()
 
+with open('version') as f:
+    version = f.read().strip()
 setup(
     name='dotdotdot',
-    version='1.0.6',
+    version=version,
     description='Access application configuration using dot notation',
     long_description=readme,
     long_description_content_type='text/markdown',
