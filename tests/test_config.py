@@ -86,3 +86,56 @@ class TestConfig:
         :param self:
         :return:
         """
+
+    def test_indexing(self):
+        """
+        Test dictionary like access
+        :return:
+        """
+        config = dotconf.load('tests/test_config.yml')
+
+        #  test subscripting
+        assert config.test.nest.inty == 1
+        assert config['test'].nest.inty == 1
+        assert config.test['nest'].inty == 1
+        assert config.test.nest['inty'] == 1
+        assert config['test']['nest']['inty'] == 1
+
+        # test get()
+
+        assert config.get('test').nest.inty == 1
+        assert config.test.get('nest').inty == 1
+        assert config.test.nest.get('inty') == 1
+        assert config.get('test').get('nest').get('inty') == 1
+
+        # test missing key raise KeyError...
+        with pytest.raises(KeyError):
+            x = config.test.nest.get('intys')
+
+        # but with default value does not
+        assert config.test.nest.get('intys', 2) == 2
+
+        # although index lookup still does
+        with pytest.raises(KeyError):
+            x = config.test.nest['intys']
+
+    def test_representation(self):
+        """
+        Test repr, str
+
+        :return:
+        """
+
+        config = dotconf.load('tests/test_config.yml')
+        assert type(config) is dotconf.Config
+        print(str(config))
+        string = ('!!python/object:dotdotdot.config.Config\ntest: '
+                  '!!python/object:dotdotdot.config.test\n  nest: '
+                  '!!python/object:dotdotdot.config.nest\n    inty: 1\n    '
+                  'listy:\n    - 1\n    stringy: string\n')
+        assert str(config) == string
+        el_repr = ('!!python/object:dotdotdot.config.Config\ntest: '
+                   '!!python/object:dotdotdot.config.test\n  nest: '
+                   '!!python/object:dotdotdot.config.nest\n    inty: 1\n    '
+                   'listy: [1]\n    stringy: string\n')
+        assert repr(config) == el_repr
