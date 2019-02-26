@@ -1,8 +1,8 @@
-# v1.0.9 (2019-02-24)
+# v1.0.10 (2019-02-25)
   * Update setup.py to fix up pypi description
 
 ----
-# v1.0.9 (2019-02-24)
+# v1.0.9 (2019-02-22)
   * Add the ability to access properties using indexing (issue #8)
 
 ----
