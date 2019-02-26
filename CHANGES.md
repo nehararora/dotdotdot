@@ -1,3 +1,11 @@
+# v1.0.9 (2019-02-24)
+  * Update setup.py to fix up pypi description
+
+----
+# v1.0.9 (2019-02-24)
+  * Add the ability to access properties using indexing (issue #8)
+
+----
 # v1.0.7 (2019-02-14)
   * Added project version file (version) and changelog (CHANGES.md)
   * Updated pytest config to always run with coverage 

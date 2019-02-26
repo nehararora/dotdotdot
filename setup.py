@@ -5,9 +5,6 @@ from setuptools import setup, find_packages
 with open('README.md') as f:
     readme = f.read()
 
-with open('LICENSE') as f:
-    license_text = f.read()
-
 with open('version') as f:
     version = f.read().strip()
 setup(
@@ -17,7 +14,6 @@ setup(
     long_description=readme,
     long_description_content_type='text/markdown',
     url='https://github.com/nehararora/dotdotdot',
-    license=license_text,
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
