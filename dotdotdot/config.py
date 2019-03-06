@@ -100,23 +100,23 @@ Config.__getitem__ = get_item_fx
 Config.get = get_fx
 
 
-def __construct(config, yml):
+def __construct(config, conf_dict):
     """
     Recursive function to construct an object corresponding to given value.
 
-    Adds elements from the input yaml to the configuration object in the first
-    argument. For complex value types recursively instantiates new objects and
-    attaches them into the configuration tree.
+    Adds elements from the input yaml or ini to the configuration object in
+    the first argument. For complex value types recursively instantiates new
+     objects and attaches them into the configuration tree.
 
-    The intent is to be able to access the yaml config using dot notation -
+    The intent is to be able to access the yaml/ini config using dot notation -
     e.g. config.a.b.c.
 
     :param config: The config object to populate.
     :param yml: The yaml corresponding to the conf parameter.
     """
 
-    for key in yml:
-        if type(yml[key]) == dict:
+    for key in conf_dict:
+        if type(conf_dict[key]) == dict:
             # create an object for the subsection
             klass = type(key, (), {})
             klass.__repr__ = repr_fx
@@ -124,11 +124,11 @@ def __construct(config, yml):
             klass.__getitem__ = get_item_fx
             klass.get = get_fx
             obj = klass()
-            __construct(obj, yml[key])
+            __construct(obj, conf_dict[key])
             setattr(config, key, obj)
         else:
             # just set simple value
-            setattr(config, key, yml[key])
+            setattr(config, key, conf_dict[key])
 
 
 def load(paths):
@@ -145,20 +145,32 @@ def load(paths):
     if not paths:
         raise ConfigException(message='No configuration file specified',
                               reason=paths)
-    yaml_dict = {}
+    config_dict = {}
     if type(paths) == str:
         paths = [paths]
     # for every filename in list...
     for path in paths:
         # read config file...
         with open(path) as f:
-            # get config as dict...
-            y = yaml.safe_load(f)
-            # and merge into a single yaml dict.
-            yaml_dict.update(y)
+
+            # TODO: try to figure out format based on extension
+            # TODO: configurate - change order of heuristic
+            # TODO: if still can't tell - try as yml first and then ini
+            le_format = 'yml'
+            # TODO: try opening as yml first - catch exception
+            # get yml config as dict...
+            if le_format == 'yml':
+                y = yaml.safe_load(f)
+                # and merge into a single yaml dict.
+                config_dict.update(y)
+            elif le_format == 'ini':
+                # TODO: load ini config
+                i = {}
+                # merge into single ini dict
+                config_dict.update(i)
     config = Config()
     # get object for each key and set on the config object
-    __construct(config, yaml_dict)
+    __construct(config, config_dict)
 
     return config
 
