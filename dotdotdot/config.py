@@ -10,7 +10,7 @@ Supported formats are:
   * TODO: ini
   * TODO: json
 """
-
+import os
 import yaml
 
 from enum import Enum
@@ -80,9 +80,54 @@ def __validate():
     # TODO: implement
 
 
-def __determine_config_type():
+def __determine_config_type(path):
     """
     Find out the type of the configuration file.
+    :param path: File path with extension
+    :return: format type
+    """
+    # TODO: determine based on file extension for now
+    ext = os.path.splitext(path)[1]
+    if not ext:
+        # TODO: no extension, need to figure out based on content
+        ext = ''
+
+    # TODO: configurate - so we can change order of heuristic checks
+    if ext.lower() == '.yml' or ext.lower() == '.yaml':
+        return 'yaml'
+    elif ext.lower() == '.ini':
+        return 'ini'
+    else:
+        # check based on content
+        if __is_yaml():
+            return 'yml'
+        elif __is_ini():
+            return 'ini'
+    # TODO: raise
+    raise ConfigException(message='Can not determine file type',
+                          reason=path)
+
+
+# TODO: implement
+def __is_yaml():
+    """
+
+    :return:
+    """
+
+
+# TODO: implement
+def __is_ini():
+    """
+    Try to determine if file is ini, either by extension or by loading.
+    :return:
+    """
+
+
+# TODO: support
+def __is_json():
+    """
+
     :return:
     """
 
@@ -153,18 +198,18 @@ def load(paths):
         # read config file...
         with open(path) as f:
 
-            # TODO: try to figure out format based on extension
-            # TODO: configurate - change order of heuristic
-            # TODO: if still can't tell - try as yml first and then ini
-            le_format = 'yml'
-            # TODO: try opening as yml first - catch exception
+            # figure out format based on extension or content
+            le_format = __determine_config_type(path)
+
             # get yml config as dict...
-            if le_format == 'yml':
+            if le_format == 'yaml':
+                print('format is yaml')
                 y = yaml.safe_load(f)
                 # and merge into a single yaml dict.
                 config_dict.update(y)
             elif le_format == 'ini':
                 # TODO: load ini config
+                print('format is ini')
                 i = {}
                 # merge into single ini dict
                 config_dict.update(i)

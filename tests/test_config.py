@@ -86,6 +86,7 @@ class TestConfig:
         :param self:
         :return:
         """
+        config = dotconf.load('tests/test_config.ini')
 
     def test_indexing(self):
         """
@@ -125,7 +126,6 @@ class TestConfig:
 
         :return:
         """
-
         config = dotconf.load('tests/test_config.yml')
         assert type(config) is dotconf.Config
         print(str(config))
