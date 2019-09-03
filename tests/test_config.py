@@ -108,14 +108,13 @@ class TestConfig:
         assert config.test.nest.get('inty') == 1
         assert config.get('test').get('nest').get('inty') == 1
 
-        # test missing key raise KeyError...
-        with pytest.raises(KeyError):
-            x = config.test.nest.get('intys')
+        # test None default
+        assert config.test.nest.get('intys', None) is None
 
-        # but with default value does not
+        # test non-None default
         assert config.test.nest.get('intys', 2) == 2
 
-        # although index lookup still does
+        # test key error
         with pytest.raises(KeyError):
             x = config.test.nest['intys']
 

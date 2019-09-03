@@ -51,10 +51,7 @@ def get_fx(self, key, default=None):
     key_exists = hasattr(self, key)
     if key_exists:
         return get_item_fx(self, key)
-    elif default:
-        return default
-    else:
-        raise KeyError
+    return default
 
 
 def get_item_fx(self, key):
