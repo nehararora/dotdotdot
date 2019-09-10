@@ -1,69 +1,84 @@
-import unittest
+# -*- coding: utf-8 -*-
+"""
+test_config: Some basic test for the package.
+"""
+import sys
+import pytest
 
 from .context import dotdotdot as dotconf
 
 
-class TestConfig(unittest.TestCase):
+class TestConfig:
     """
     Test class for the config module
     """
     def test_creation(self):
-        with self.assertRaises(TypeError) as context:
+        with pytest.raises(TypeError) as ei:
             dotconf.load()
-        te = context.exception
-        print('========')
-        print(str(te))
-        print('========')
-        self.assertEquals('xload() takes exactly 1 argument (0 given)', str(te))
+        # python 2, 3 have different messaging
+        if sys.version_info.major == 2:
+            msg = 'load() takes exactly 1 argument (0 given)'
+        else:
+            msg = "load() missing 1 required positional argument: 'paths'"
+        assert msg == str(ei.value)
 
-        with self.assertRaises(dotconf.ConfigException) as context:
+        with pytest.raises(dotconf.ConfigException) as ei:
             dotconf.load('')
-        ce = context.exception
-        self.assertEquals("'No configuration file specified'", str(ce))
-        self.assertEquals('', ce.reason)
+        assert "'No configuration file specified'" == str(ei.value)
 
-        with self.assertRaises(dotconf.ConfigException) as context:
+        # TODO: how? assert '' == ce.reason
+
+        with pytest.raises(dotconf.ConfigException) as ei:
             dotconf.load(None)
-        ce = context.exception
-        self.assertEquals("'No configuration file specified'", str(ce))
-        self.assertEquals(None, ce.reason)
+        assert "'No configuration file specified'" == str(ei.value)
+        # TODO: how?
+        # assert ce.reason is None
 
-        with self.assertRaises(dotconf.ConfigException) as context:
+        with pytest.raises(dotconf.ConfigException) as ei:
             dotconf.load([])
-        ce = context.exception
-        self.assertEquals("'No configuration file specified'", str(ce))
-        self.assertEquals([], ce.reason)
+        assert "'No configuration file specified'" == str(ei.value)
+        # assert [] == ce.reason
 
-        with self.assertRaises(IOError) as context:
+        with pytest.raises(IOError) as ei:
             dotconf.load(['whatevs'])
-        ioe = context.exception
-        self.assertEquals('whatevs', ioe.filename)
-        self.assertEquals("[Errno 2] No such file or directory: 'whatevs'", str(ioe))
-        with self.assertRaises(IOError) as context:
+        msg = "[Errno 2] No such file or directory: 'whatevs'"
+        assert msg == str(ei.value)
+        with pytest.raises(IOError) as ei:
             dotconf.load('whatevs')
-        ioe = context.exception
-        self.assertEquals('whatevs', ioe.filename)
-        self.assertEquals("[Errno 2] No such file or directory: 'whatevs'", str(ioe))
+        msg = "[Errno 2] No such file or directory: 'whatevs'"
+        assert msg == str(ei.value)
+
+        # check for specified file being a directory
+        if sys.version_info.major == 3:
+            msg = ''
+            with pytest.raises(IsADirectoryError) as de:
+                config = dotconf.load('tests')
+                assert msg == str(de.value)
+        elif sys.version_info.major == 2:
+            msg = "[Errno 21] Is a directory: 'tests'"
+            with pytest.raises(IOError) as ie:
+                config = dotconf.load('tests')
+                assert msg == str(ie.value)
 
         config = dotconf.load('tests/test_config.yml')
-        self.assertEquals(dotconf.Config, type(config))
+        assert dotconf.Config == type(config)
 
     def test_yml(self):
         config = dotconf.load('tests/test_config.yml')
-        self.assertEquals(dotconf.Config, type(config))
-        self.assertTrue(hasattr(config, 'test'))
-        self.assertTrue(hasattr(config.test, 'nest'))
-        self.assertTrue(hasattr(config.test.nest, 'inty'))
-        self.assertEquals(int, type(config.test.nest.inty))
-        self.assertEquals(1, config.test.nest.inty)
+        assert type(config) is dotconf.Config
+        assert hasattr(config, 'test')
+        assert hasattr(config.test, 'nest')
+        assert hasattr(config.test.nest, 'inty')
+        assert type(config.test.nest.inty) is int
+        assert 1 == config.test.nest.inty
 
-        self.assertTrue(hasattr(config.test.nest, 'listy'))
-        self.assertEquals(list, type(config.test.nest.listy))
-        self.assertEquals([1], config.test.nest.listy)
+        assert hasattr(config.test.nest, 'listy')
+        assert type(config.test.nest.listy) is list
+        assert [1] == config.test.nest.listy
 
-        self.assertTrue(hasattr(config.test.nest, 'stringy'))
-        self.assertEquals(str, type(config.test.nest.stringy))
-        self.assertEquals('string', config.test.nest.stringy)
+        assert hasattr(config.test.nest, 'stringy')
+        assert type(config.test.nest.stringy) is str
+        assert 'string' == config.test.nest.stringy
 
     def test_ini(self):
         """
@@ -72,6 +87,55 @@ class TestConfig(unittest.TestCase):
         :return:
         """
 
+    def test_indexing(self):
+        """
+        Test dictionary like access
+        :return:
+        """
+        config = dotconf.load('tests/test_config.yml')
 
-if __name__ == '__main__':
-    unittest.main()
+        #  test subscripting
+        assert config.test.nest.inty == 1
+        assert config['test'].nest.inty == 1
+        assert config.test['nest'].inty == 1
+        assert config.test.nest['inty'] == 1
+        assert config['test']['nest']['inty'] == 1
+
+        # test get()
+
+        assert config.get('test').nest.inty == 1
+        assert config.test.get('nest').inty == 1
+        assert config.test.nest.get('inty') == 1
+        assert config.get('test').get('nest').get('inty') == 1
+
+        # test missing key raise KeyError...
+        with pytest.raises(KeyError):
+            x = config.test.nest.get('intys')
+
+        # but with default value does not
+        assert config.test.nest.get('intys', 2) == 2
+
+        # although index lookup still does
+        with pytest.raises(KeyError):
+            x = config.test.nest['intys']
+
+    def test_representation(self):
+        """
+        Test repr, str
+
+        :return:
+        """
+
+        config = dotconf.load('tests/test_config.yml')
+        assert type(config) is dotconf.Config
+        print(str(config))
+        string = ('!!python/object:dotdotdot.config.Config\ntest: '
+                  '!!python/object:dotdotdot.config.test\n  nest: '
+                  '!!python/object:dotdotdot.config.nest\n    inty: 1\n    '
+                  'listy:\n    - 1\n    stringy: string\n')
+        assert str(config) == string
+        el_repr = ('!!python/object:dotdotdot.config.Config\ntest: '
+                   '!!python/object:dotdotdot.config.test\n  nest: '
+                   '!!python/object:dotdotdot.config.nest\n    inty: 1\n    '
+                   'listy: [1]\n    stringy: string\n')
+        assert repr(config) == el_repr

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-config.py: Loads application configuration and returns an object representation.
+config: Load application configuration and return an object representation.
 
 Allows accessing configuration using "dot-notation" for supported configuration
 file formats.
@@ -21,7 +21,8 @@ Formats = Enum('Formats', names=[('yml', 1), ('ini', 2)])
 
 def repr_fx(self):
     """
-    Object representation. Function gets added as a method to generated classes.
+    Object representation. Function gets added as a method
+    to generated classes.
 
     :return: string object representation
     """
@@ -30,11 +31,44 @@ def repr_fx(self):
 
 def str_fx(self):
     """
-    String representation. Function gets added as a method to generated classes.
+    String representation. Function gets added as a method
+    to generated classes.
 
     :return: string object representation
     """
     return yaml.dump(self, default_flow_style=False)
+
+
+def get_fx(self, key, default=None):
+    """
+    Allow for c.get(foo) invocation.
+
+    :param self: Config object
+    :param key: config key to look for
+    :param default: value if key is missing
+    :return:
+    """
+    key_exists = hasattr(self, key)
+    if key_exists:
+        return get_item_fx(self, key)
+    elif default:
+        return default
+    else:
+        raise KeyError
+
+
+def get_item_fx(self, key):
+    """
+    Function to implement __getitem__
+
+    :param self:
+    :param key:
+    :return:
+    """
+    if hasattr(self, key):
+        return getattr(self, key)
+    else:
+        raise KeyError
 
 
 def __validate():
@@ -62,6 +96,8 @@ class Config(object):
 
 Config.__repr__ = repr_fx
 Config.__str__ = str_fx
+Config.__getitem__ = get_item_fx
+Config.get = get_fx
 
 
 def __construct(config, yml):
@@ -85,6 +121,8 @@ def __construct(config, yml):
             klass = type(key, (), {})
             klass.__repr__ = repr_fx
             klass.__str__ = str_fx
+            klass.__getitem__ = get_item_fx
+            klass.get = get_fx
             obj = klass()
             __construct(obj, yml[key])
             setattr(config, key, obj)
@@ -105,7 +143,8 @@ def load(paths):
     :return Config object with member properties
     """
     if not paths:
-        raise ConfigException(message='No configuration file specified', reason=paths)
+        raise ConfigException(message='No configuration file specified',
+                              reason=paths)
     yaml_dict = {}
     if type(paths) == str:
         paths = [paths]
@@ -131,4 +170,3 @@ class ConfigException(Exception):
 
     def __str__(self):
         return repr(self.message)
-
