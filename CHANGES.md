@@ -1,3 +1,7 @@
+# v1.0.11 (2019-09-10)
+  * Update manifest to include the version file for setup.py
+
+----
 # v1.0.10 (2019-02-25)
   * Update setup.py to fix up pypi description
 
