@@ -13,10 +13,10 @@ Supported formats are:
 
 import yaml
 
-from enum import Enum
+# from enum import Enum
 
 
-Formats = Enum('Formats', names=[('yml', 1), ('ini', 2)])
+# Formats = Enum('Formats', names=[('yml', 1), ('ini', 2)])
 
 
 def repr_fx(self):
