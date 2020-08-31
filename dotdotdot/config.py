@@ -163,6 +163,33 @@ def load(paths):
     return config
 
 
+def save(config, path):
+    """
+    Save an already loaded config to the specified path.
+
+    Provides the ability to save a config object previously loaded from a yml.
+    yml file. Path is expected to provide the filename- e.g. /foo/bar/baz.yml.
+    :param config: Previously loaded Config object
+    :param path: File path to write to, including filename.
+    :return:
+    """
+    with open(path, 'w') as f:
+        # TODO: loop over everything we've got in config
+        print('==='*4)
+        for x in config.__dict__:
+            print(x)
+        print('===' * 4)
+        for x in config.test.__dict__:
+            print(x)
+        print('===' * 4)
+        for x in config.test.nest.__dict__:
+            print(x)
+        print('===' * 4)
+        assert(False)
+        # and print it out
+        f.write('# this is my config. i will cherish it forever')
+
+
 class ConfigException(Exception):
     def __init__(self, message, reason):
         self.message = message

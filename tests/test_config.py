@@ -139,3 +139,17 @@ class TestConfig:
                    '!!python/object:dotdotdot.config.nest\n    inty: 1\n    '
                    'listy: [1]\n    stringy: string\n')
         assert repr(config) == el_repr
+
+    def test_save(self):
+        """
+        Test case for saving a config object.
+        :return:
+        """
+        # load a test config file
+        config = dotconf.load('tests/test_config.yml')
+        # save to a test config file
+        dotconf.save(config, 'tests/test_config_saved.yml')
+        # TODO: assert this thing
+        # read file and make sure it looks like we expect it to
+        # dotconf.load('tests/test_config_saved.yml')
+        # TODO: assert loaded values
