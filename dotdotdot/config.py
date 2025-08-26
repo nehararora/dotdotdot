@@ -13,11 +13,6 @@ Supported formats are:
 
 import yaml
 
-# from enum import Enum
-
-
-# Formats = Enum('Formats', names=[('yml', 1), ('ini', 2)])
-
 
 def repr_fx(self):
     """
@@ -48,14 +43,13 @@ def get_fx(self, key, default=None):
     :param default: value if key is missing
     :return:
     """
-    key_exists = hasattr(self, key)
-    if key_exists:
+    if hasattr(self, key):
         return get_item_fx(self, key)
-    elif default:
-        return default
     else:
-        raise KeyError
-
+        if default:
+            return default
+        else:
+            raise AttributeError
 
 def get_item_fx(self, key):
     """
@@ -68,7 +62,14 @@ def get_item_fx(self, key):
     if hasattr(self, key):
         return getattr(self, key)
     else:
-        raise KeyError
+        raise AttributeError
+
+
+def getattr_fx(self, key):
+    if self.__raise_on_missing__:
+        raise AttributeError
+    else:
+        return None
 
 
 def __validate():
@@ -91,12 +92,14 @@ class Config(object):
     """
     The configuration object that will be populated.
     """
-    pass
-
+    def __init__(self, raise_on_missing:bool=False):
+        self.__raise_on_missing__ = raise_on_missing
 
 Config.__repr__ = repr_fx
 Config.__str__ = str_fx
 Config.__getitem__ = get_item_fx
+# Config.__getattribute__ = getattr_fx
+Config.__getattr__ = getattr_fx
 Config.get = get_fx
 
 
@@ -122,6 +125,9 @@ def __construct(config, yml):
             klass.__repr__ = repr_fx
             klass.__str__ = str_fx
             klass.__getitem__ = get_item_fx
+            klass.__getattr__ = getattr_fx
+            klass.__raise_on_missing__ = config.__raise_on_missing__
+
             klass.get = get_fx
             obj = klass()
             __construct(obj, yml[key])
@@ -131,7 +137,7 @@ def __construct(config, yml):
             setattr(config, key, yml[key])
 
 
-def load(paths):
+def load(paths, raise_on_missing=False):
     """
     Entry point for the config module.
 
@@ -140,8 +146,10 @@ def load(paths):
     later in the list override earlier keys.
 
     :param paths: List of complete paths of config files.
-    :return Config object with member properties
+    :param raise_on_missing: If True, raise AttributeError if a key is missing, else return None.
+    :return Config: object with member properties
     """
+
     if not paths:
         raise ConfigException(message='No configuration file specified',
                               reason=paths)
@@ -156,7 +164,9 @@ def load(paths):
             y = yaml.safe_load(f)
             # and merge into a single yaml dict.
             yaml_dict.update(y)
-    config = Config()
+
+    config = Config(raise_on_missing)
+
     # get object for each key and set on the config object
     __construct(config, yaml_dict)
 

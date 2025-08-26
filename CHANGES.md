@@ -1,3 +1,6 @@
+# v1.0.12 (2024-08-26)
+  * Add option to raise AttributeError or return None on missing properties.
+
 # v1.0.11 (2019-09-10)
   * Update manifest to include the version file for setup.py
 
@@ -12,7 +15,7 @@
 ----
 # v1.0.7 (2019-02-14)
   * Added project version file (version) and changelog (CHANGES.md)
-  * Updated pytest config to always run with coverage 
+  * Updated pytest config to always run with coverage
 
 ----
 # v1.0.6 (2019-02-14)
