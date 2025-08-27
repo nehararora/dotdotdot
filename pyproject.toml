@@ -37,4 +37,4 @@ dev = [
 
 [project.urls]
 Homepage = "https://github.com/nehararora/dotdotdot"
-Issues = "https://github.com/pypa/sampleproject/issues"
+Issues = "https://github.com/nehararora/dotdotdot/issues"
