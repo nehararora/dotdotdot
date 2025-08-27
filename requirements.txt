@@ -1,5 +1,0 @@
-PyYAML
-pytest == 8.3.4
-pytest-pep8
-pytest-flake8
-pytest-cov == 6.2.1
