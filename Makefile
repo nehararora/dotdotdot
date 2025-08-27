@@ -1,8 +1,8 @@
 all:
-	python setup.py sdist bdist_wheel
+	python -m build
 
 init:
-	pip install -r requirements.txt
+	pip install .[dev]
 
 test:
 	pytest
